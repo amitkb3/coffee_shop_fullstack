@@ -118,6 +118,9 @@ def create_drink(payload):
 @app.route('/drinks/<int:drink_id', methods=['PATCH'])
 @requires_auth('patch:drinks')
 def edit_drinks(payload, drink_id):
+    """
+    Edit drink details if having permission
+    """
     try:
         body = request.get_json(request)
         title = body.get('title', None)
@@ -152,7 +155,25 @@ def edit_drinks(payload, drink_id):
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
-
+@app.route('/drinks/<int:drink_id', methods=['DELETE'])
+@requires_auth('delete:drinks')
+def delete_drinks(payload, drink_id):
+    """
+    Delete drink from database if having permission
+    """
+    try:
+        # check if id is already present
+        drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
+        if drink is None:
+            abort(404)
+        # delete drink
+        drink.delete()
+        return jsonify({
+            'success': True,
+            'delete': drink_id
+        })
+    except Exception:
+        abort(422)
 
 ## Error Handling
 '''
