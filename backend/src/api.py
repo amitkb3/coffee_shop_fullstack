@@ -104,12 +104,6 @@ def create_drink(payload):
         abort(422)
 
 
-
-
-        
-
-
-
 '''
 @TODO implement endpoint
     PATCH /drinks/<id>
@@ -121,6 +115,31 @@ def create_drink(payload):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks/<int:drink_id', methods=['PATCH'])
+@requires_auth('patch:drinks')
+def edit_drinks(payload, drink_id):
+    try:
+        body = request.get_json(request)
+        title = body.get('title', None)
+        recipe = body.get('recipe', None)
+        if title is None or recipe is None:
+            abort(400)
+        # check if id is already present
+        drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
+        if drink is None:
+            abort(404)
+        # edit drink
+        drink.title = title
+        drink.recipe = json.dumps(recipe)
+        drink.update()
+        drink_long_format = drink.long()
+        return jsonify({
+            'success': True,
+            'drinks': drink_long_format
+        })
+    except Exception:
+        abort(422)
+
 
 
 '''
