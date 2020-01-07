@@ -93,9 +93,9 @@ def create_drink(payload):
             abort(400)
         # Create new drink
         new_drink = Drink(title=title, recipe=json.dumps(recipe))
-        new_drink_result = Drink.query.filter(Drink.id = new_drink.id).first()
-        drink_long_format = new_drink_result.long()
         new_drink.insert()
+        new_drink_result = Drink.query.filter(Drink.id == new_drink.id).first()
+        drink_long_format = new_drink_result.long()
         return jsonify({
             'success': True,
             'drinks': drink_long_format
