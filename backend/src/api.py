@@ -75,6 +75,38 @@ def get_drink_detail(payload):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks', methods=['POST'])
+@requires_auth('post:drinks')
+def create_drink(payload):
+    """
+    Post new drink if manager with post permission
+    """
+    try:
+        body = request.get_json(request)
+        title = body.get('title', None)
+        recipe = body.get('recipe', None)
+        if title is None or recipe is None:
+            abort(400)
+        # check if title is already present
+        drink = Drink.query.filter(Drink.title == title).one_or_none()
+        if drink:
+            abort(400)
+        # Create new drink
+        new_drink = Drink(title=title, recipe=json.dumps(recipe))
+        new_drink_result = Drink.query.filter(Drink.id = new_drink.id).first()
+        drink_long_format = new_drink_result.long()
+        new_drink.insert()
+        return jsonify({
+            'success': True,
+            'drinks': drink_long_format
+        })
+    except Exception:
+        abort(422)
+
+
+
+
+        
 
 
 
