@@ -19,7 +19,7 @@ CORS(app)
 '''
 # db_drop_and_create_all()
 
-## ROUTES
+# ROUTES
 @app.route('/drinks')
 def get_drinks():
     """
@@ -34,6 +34,7 @@ def get_drinks():
         }), 200
     except Exception:
         abort(422)
+
 
 @app.route('/drinks-detail')
 @requires_auth('get:drinks-detail')
@@ -79,7 +80,6 @@ def create_drink(payload):
         })
     except Exception:
         abort(422)
-
 
 
 @app.route('/drinks/<int:drink_id', methods=['PATCH'])
@@ -131,33 +131,37 @@ def delete_drinks(payload, drink_id):
     except Exception:
         abort(422)
 
-## Error Handling
+
+# Error Handling
 '''
 Example error handling for unprocessable entity
 '''
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
-                    "success": False, 
-                    "error": 422,
-                    "message": "unprocessable"
-                    }), 422
+        "success": False,
+        "error": 422,
+        "message": "unprocessable"
+    }), 422
+
 
 @app.errorhandler(404)
 def unprocessable(error):
     return jsonify({
-                    "success": False, 
-                    "error": 404,
-                    "message": "unprocresource not found"
-                    }), 404
+        "success": False,
+        "error": 404,
+        "message": "unprocresource not found"
+    }), 404
+
 
 @app.errorhandler(AuthError)
 def auth_error(auth_error):
     return jsonify({
-                    "success": False, 
-                    "error": auth_error.status_code,
-                    "message": auth_error.error['description']
-                    }), auth_error.status_code
+        "success": False,
+        "error": auth_error.status_code,
+        "message": auth_error.error['description']
+    }), auth_error.status_code
+
 
 @app.errorhandler(HTTPException)
 def http_exception_handler(error):
