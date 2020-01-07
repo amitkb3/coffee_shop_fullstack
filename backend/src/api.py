@@ -3,7 +3,6 @@ from flask import Flask, request, jsonify, abort
 from sqlalchemy import exc
 import json
 from flask_cors import CORS
-from werkzeug.exceptions import HTTPException
 
 from .database.models import db_drop_and_create_all, setup_db, Drink
 from .auth.auth import AuthError, requires_auth
@@ -161,17 +160,3 @@ def auth_error(auth_error):
         "error": auth_error.status_code,
         "message": auth_error.error['description']
     }), auth_error.status_code
-
-
-@app.errorhandler(HTTPException)
-def http_exception_handler(error):
-    """
-    HTTP error handler for all endpoints
-    :param error: HTTPException containing code and description
-    :return: error: HTTP status code, message: Error description
-    """
-    return jsonify({
-        'success': False,
-        'error': error.code,
-        'message': error.description
-    }), error.code
