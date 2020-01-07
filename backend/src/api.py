@@ -91,15 +91,17 @@ def edit_drinks(payload, drink_id):
         body = request.get_json(request)
         title = body.get('title', None)
         recipe = body.get('recipe', None)
-        if title is None or recipe is None:
+        if title is None and recipe is None:
             abort(400)
         # check if id is already present
         drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
         if drink is None:
             abort(404)
         # edit drink
-        drink.title = title
-        drink.recipe = json.dumps(recipe)
+        if title:
+            drink.title = title
+        if recipe:
+            drink.recipe = json.dumps(recipe)
         drink.update()
         drink_long_format = drink.long()
         return jsonify({
