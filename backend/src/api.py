@@ -81,7 +81,7 @@ def create_drink(payload):
         abort(422)
 
 
-@app.route('/drinks/<int:drink_id', methods=['PATCH'])
+@app.route('/drinks/<int:drink_id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
 def edit_drinks(payload, drink_id):
     """
@@ -110,7 +110,7 @@ def edit_drinks(payload, drink_id):
         abort(422)
 
 
-@app.route('/drinks/<int:drink_id', methods=['DELETE'])
+@app.route('/drinks/<int:drink_id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
 def delete_drinks(payload, drink_id):
     """
